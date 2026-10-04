@@ -125,9 +125,6 @@ echo "======================================"
 echo " Installing kubectl..."
 echo "======================================"
 
-
-# Install required packages
-
 sudo apt-get update
 
 sudo apt-get install -y \
@@ -190,18 +187,9 @@ echo "======================================"
 echo " Installing Minikube..."
 echo "======================================"
 
-
-# Download latest Minikube binary
-
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 
-
-# Install Minikube
-
 sudo install minikube-linux-amd64 /usr/local/bin/minikube
-
-
-# Remove downloaded binary
 
 rm -f minikube-linux-amd64
 
@@ -218,7 +206,58 @@ echo "Minikube installation completed!"
 
 
 # ==================================================
-# 6. FINAL MESSAGE
+# 6. INSTALL PYTHON
+# ==================================================
+
+echo "======================================"
+echo " Installing Python..."
+echo "======================================"
+
+sudo apt update
+
+sudo apt install -y \
+    python3 \
+    python3-pip \
+    python3-venv
+
+
+# Verify Python
+
+echo "======================================"
+echo " Verifying Python..."
+echo "======================================"
+
+python3 --version
+pip3 --version
+
+echo "Python installation completed!"
+
+
+# ==================================================
+# 7. INSTALL JAVA
+# ==================================================
+
+echo "======================================"
+echo " Installing Java 17..."
+echo "======================================"
+
+sudo apt install -y openjdk-17-jdk
+
+
+# Verify Java
+
+echo "======================================"
+echo " Verifying Java..."
+echo "======================================"
+
+java -version
+javac -version
+
+echo "Java installation completed!"
+
+
+# ==================================================
+# 8. FINAL MESSAGE
 # ==================================================
 
 echo ""
@@ -232,10 +271,13 @@ echo "  ✓ Docker"
 echo "  ✓ Docker Compose"
 echo "  ✓ kubectl"
 echo "  ✓ Minikube"
+echo "  ✓ Python"
+echo "  ✓ pip"
+echo "  ✓ Python venv"
+echo "  ✓ Java 17"
 
 echo ""
 echo "Next tools to add:"
-echo "  - Python"
 echo "  - Terraform"
 echo "  - Jenkins"
 
