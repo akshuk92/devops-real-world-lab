@@ -146,7 +146,7 @@ sudo mkdir -p -m 755 /etc/apt/keyrings
 
 curl -fsSL \
     https://pkgs.k8s.io/core:/stable:/v1.34/deb/Release.key \
-    | sudo gpg --dearmor \
+    | sudo gpg --dearmor --yes \
     -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
 
@@ -183,7 +183,42 @@ echo "kubectl installation completed!"
 
 
 # ==================================================
-# 5. FINAL MESSAGE
+# 5. INSTALL MINIKUBE
+# ==================================================
+
+echo "======================================"
+echo " Installing Minikube..."
+echo "======================================"
+
+
+# Download latest Minikube binary
+
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+
+
+# Install Minikube
+
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
+
+
+# Remove downloaded binary
+
+rm -f minikube-linux-amd64
+
+
+# Verify Minikube
+
+echo "======================================"
+echo " Verifying Minikube..."
+echo "======================================"
+
+minikube version
+
+echo "Minikube installation completed!"
+
+
+# ==================================================
+# 6. FINAL MESSAGE
 # ==================================================
 
 echo ""
@@ -196,10 +231,10 @@ echo "  ✓ Basic Linux tools"
 echo "  ✓ Docker"
 echo "  ✓ Docker Compose"
 echo "  ✓ kubectl"
+echo "  ✓ Minikube"
 
 echo ""
 echo "Next tools to add:"
-echo "  - Minikube"
 echo "  - Python"
 echo "  - Terraform"
 echo "  - Jenkins"
@@ -208,5 +243,9 @@ echo ""
 echo "IMPORTANT:"
 echo "If Docker permission is denied, run:"
 echo "  newgrp docker"
+
+echo ""
+echo "To start Kubernetes with Minikube:"
+echo "  minikube start --driver=docker"
 
 echo "======================================"
