@@ -6,21 +6,26 @@ echo "======================================"
 echo " DevOps Real-World Lab Setup"
 echo "======================================"
 
-# --------------------------------------------------
-# 1. Update system
-# --------------------------------------------------
 
-echo "Updating system packages..."
+# ==================================================
+# 1. UPDATE SYSTEM
+# ==================================================
+
+echo "======================================"
+echo " Updating system packages..."
+echo "======================================"
 
 sudo apt update
 sudo apt upgrade -y
 
 
-# --------------------------------------------------
-# 2. Install basic tools
-# --------------------------------------------------
+# ==================================================
+# 2. INSTALL BASIC TOOLS
+# ==================================================
 
-echo "Installing basic tools..."
+echo "======================================"
+echo " Installing basic tools..."
+echo "======================================"
 
 sudo apt install -y \
     git \
@@ -35,15 +40,15 @@ sudo apt install -y \
     apt-transport-https
 
 
-# --------------------------------------------------
-# 3. Install Docker
-# --------------------------------------------------
+# ==================================================
+# 3. INSTALL DOCKER
+# ==================================================
 
 echo "======================================"
 echo " Installing Docker..."
 echo "======================================"
 
-# Remove conflicting packages if they exist
+# Remove conflicting Docker packages if present
 
 sudo apt remove -y \
     docker.io \
@@ -54,7 +59,7 @@ sudo apt remove -y \
     runc 2>/dev/null || true
 
 
-# Add Docker's official GPG key
+# Add Docker GPG key
 
 sudo install -m 0755 -d /etc/apt/keyrings
 
@@ -79,7 +84,7 @@ echo \
 sudo apt update
 
 
-# Install Docker Engine and plugins
+# Install Docker
 
 sudo apt install -y \
     docker-ce \
@@ -89,7 +94,7 @@ sudo apt install -y \
     docker-compose-plugin
 
 
-# Start Docker
+# Enable and start Docker
 
 sudo systemctl enable docker
 sudo systemctl start docker
@@ -100,9 +105,7 @@ sudo systemctl start docker
 sudo usermod -aG docker "$USER"
 
 
-# --------------------------------------------------
-# 4. Verify Docker
-# --------------------------------------------------
+# Verify Docker
 
 echo "======================================"
 echo " Verifying Docker..."
@@ -111,29 +114,99 @@ echo "======================================"
 sudo docker --version
 sudo docker compose version
 
+echo "Docker installation completed!"
+
+
+# ==================================================
+# 4. INSTALL KUBECTL
+# ==================================================
+
 echo "======================================"
-echo " Docker installation completed!"
+echo " Installing kubectl..."
 echo "======================================"
 
 
-# --------------------------------------------------
-# 5. Final message
-# --------------------------------------------------
+# Install required packages
+
+sudo apt-get update
+
+sudo apt-get install -y \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gpg
+
+
+# Create Kubernetes keyring directory
+
+sudo mkdir -p -m 755 /etc/apt/keyrings
+
+
+# Add Kubernetes signing key
+
+curl -fsSL \
+    https://pkgs.k8s.io/core:/stable:/v1.34/deb/Release.key \
+    | sudo gpg --dearmor \
+    -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+
+# Set permissions
+
+sudo chmod 644 /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+
+# Add Kubernetes repository
+
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.34/deb/ /' \
+    | sudo tee /etc/apt/sources.list.d/kubernetes.list > /dev/null
+
+
+# Update package index
+
+sudo apt-get update
+
+
+# Install kubectl
+
+sudo apt-get install -y kubectl
+
+
+# Verify kubectl
+
+echo "======================================"
+echo " Verifying kubectl..."
+echo "======================================"
+
+kubectl version --client
+
+echo "kubectl installation completed!"
+
+
+# ==================================================
+# 5. FINAL MESSAGE
+# ==================================================
 
 echo ""
 echo "======================================"
-echo " Basic lab setup completed!"
+echo " DevOps Lab Setup Completed!"
 echo "======================================"
 
-echo "IMPORTANT:"
-echo "Log out and log back in before running Docker"
-echo "without sudo."
+echo "Installed:"
+echo "  ✓ Basic Linux tools"
+echo "  ✓ Docker"
+echo "  ✓ Docker Compose"
+echo "  ✓ kubectl"
 
 echo ""
-echo "Next tools we will add:"
-echo "  - kubectl"
+echo "Next tools to add:"
 echo "  - Minikube"
 echo "  - Python"
 echo "  - Terraform"
 echo "  - Jenkins"
+
+echo ""
+echo "IMPORTANT:"
+echo "If Docker permission is denied, run:"
+echo "  newgrp docker"
+
 echo "======================================"
