@@ -79,8 +79,6 @@ echo \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 
-# Update package index
-
 sudo apt update
 
 
@@ -134,12 +132,10 @@ sudo apt-get install -y \
     gpg
 
 
-# Create Kubernetes keyring directory
-
 sudo mkdir -p -m 755 /etc/apt/keyrings
 
 
-# Add Kubernetes signing key
+# Kubernetes signing key
 
 curl -fsSL \
     https://pkgs.k8s.io/core:/stable:/v1.34/deb/Release.key \
@@ -147,18 +143,14 @@ curl -fsSL \
     -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
 
-# Set permissions
-
 sudo chmod 644 /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
 
-# Add Kubernetes repository
+# Kubernetes repository
 
 echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.34/deb/ /' \
     | sudo tee /etc/apt/sources.list.d/kubernetes.list > /dev/null
 
-
-# Update package index
 
 sudo apt-get update
 
@@ -257,7 +249,102 @@ echo "Java installation completed!"
 
 
 # ==================================================
-# 8. FINAL MESSAGE
+# 8. INSTALL TERRAFORM
+# ==================================================
+
+echo "======================================"
+echo " Installing Terraform..."
+echo "======================================"
+
+# Add HashiCorp GPG key
+
+sudo install -m 0755 -d /etc/apt/keyrings
+
+curl -fsSL \
+    https://apt.releases.hashicorp.com/gpg \
+    | sudo gpg --dearmor --yes \
+    -o /etc/apt/keyrings/hashicorp-archive-keyring.gpg
+
+
+sudo chmod 644 /etc/apt/keyrings/hashicorp-archive-keyring.gpg
+
+
+# Add HashiCorp repository
+
+echo "deb [signed-by=/etc/apt/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") main" \
+    | sudo tee /etc/apt/sources.list.d/hashicorp.list > /dev/null
+
+
+# Update package index
+
+sudo apt update
+
+
+# Install Terraform
+
+sudo apt install -y terraform
+
+
+# Verify Terraform
+
+echo "======================================"
+echo " Verifying Terraform..."
+echo "======================================"
+
+terraform version
+
+echo "Terraform installation completed!"
+
+
+# ==================================================
+# 9. INSTALL JENKINS
+# ==================================================
+
+echo "======================================"
+echo " Installing Jenkins..."
+echo "======================================"
+
+# Add Jenkins repository key
+
+sudo wget -O /etc/apt/keyrings/jenkins-keyring.asc \
+    https://pkg.jenkins.io/debian-stable/jenkins.io-2026.key
+
+
+# Add Jenkins repository
+
+echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/" \
+    | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+
+
+# Update package index
+
+sudo apt-get update
+
+
+# Install Jenkins
+
+sudo apt-get install -y jenkins
+
+
+# Enable and start Jenkins
+
+sudo systemctl enable jenkins
+sudo systemctl start jenkins
+
+
+# Verify Jenkins
+
+echo "======================================"
+echo " Verifying Jenkins..."
+echo "======================================"
+
+sudo systemctl status jenkins --no-pager
+
+echo "Jenkins installation completed!"
+
+
+# ==================================================
+# 10. FINAL MESSAGE
 # ==================================================
 
 echo ""
@@ -275,19 +362,29 @@ echo "  ✓ Python"
 echo "  ✓ pip"
 echo "  ✓ Python venv"
 echo "  ✓ Java 17"
+echo "  ✓ Terraform"
+echo "  ✓ Jenkins"
 
 echo ""
-echo "Next tools to add:"
-echo "  - Terraform"
-echo "  - Jenkins"
-
+echo "Useful commands:"
 echo ""
-echo "IMPORTANT:"
-echo "If Docker permission is denied, run:"
-echo "  newgrp docker"
-
-echo ""
-echo "To start Kubernetes with Minikube:"
+echo "Start Kubernetes:"
 echo "  minikube start --driver=docker"
+
+echo ""
+echo "Check Kubernetes:"
+echo "  kubectl get nodes"
+
+echo ""
+echo "Check Jenkins:"
+echo "  sudo systemctl status jenkins"
+
+echo ""
+echo "Jenkins initial password:"
+echo "  sudo cat /var/lib/jenkins/secrets/initialAdminPassword"
+
+echo ""
+echo "If Docker permission is denied:"
+echo "  newgrp docker"
 
 echo "======================================"
