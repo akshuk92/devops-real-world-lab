@@ -297,54 +297,7 @@ echo "Terraform installation completed!"
 
 
 # ==================================================
-# 9. INSTALL JENKINS
-# ==================================================
-
-echo "======================================"
-echo " Installing Jenkins..."
-echo "======================================"
-
-# Add Jenkins repository key
-
-sudo wget -O /etc/apt/keyrings/jenkins-keyring.asc \
-    https://pkg.jenkins.io/debian-stable/jenkins.io-2026.key
-
-
-# Add Jenkins repository
-
-echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/" \
-    | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
-
-
-# Update package index
-
-sudo apt-get update
-
-
-# Install Jenkins
-
-sudo apt-get install -y jenkins
-
-
-# Enable and start Jenkins
-
-sudo systemctl enable jenkins
-sudo systemctl start jenkins
-
-
-# Verify Jenkins
-
-echo "======================================"
-echo " Verifying Jenkins..."
-echo "======================================"
-
-sudo systemctl status jenkins --no-pager
-
-echo "Jenkins installation completed!"
-
-
-# ==================================================
-# 10. FINAL MESSAGE
+# 9. FINAL MESSAGE
 # ==================================================
 
 echo ""
@@ -363,7 +316,6 @@ echo "  ✓ pip"
 echo "  ✓ Python venv"
 echo "  ✓ Java 17"
 echo "  ✓ Terraform"
-echo "  ✓ Jenkins"
 
 echo ""
 echo "Useful commands:"
@@ -374,14 +326,6 @@ echo "  minikube start --driver=docker"
 echo ""
 echo "Check Kubernetes:"
 echo "  kubectl get nodes"
-
-echo ""
-echo "Check Jenkins:"
-echo "  sudo systemctl status jenkins"
-
-echo ""
-echo "Jenkins initial password:"
-echo "  sudo cat /var/lib/jenkins/secrets/initialAdminPassword"
 
 echo ""
 echo "If Docker permission is denied:"
